@@ -4,6 +4,7 @@ Processes reaction events and triggers Airtable record creation.
 """
 
 import json
+import re
 import requests
 from typing import Dict, Any, List, Optional
 from datetime import datetime
@@ -114,6 +115,43 @@ def get_assignee_name(user_id: str) -> Optional[str]:
         return None
 
 
+def replace_user_mentions(message_text: str) -> str:
+    """
+    Replace Slack user ID mentions (<@U12345>) with display names (@username).
+    
+    Args:
+        message_text: The message text containing user mentions
+        
+    Returns:
+        Message text with user IDs replaced by display names
+    """
+    # Pattern to match Slack user mentions: <@U12345>
+    mention_pattern = r'<@(U[A-Z0-9]+)>'
+    
+    def replace_mention(match):
+        user_id = match.group(1)
+        user_info = slack_client.get_user_info(user_id)
+        
+        if user_info:
+            # Try to get display_name first, fall back to name
+            display_name = user_info.get("profile", {}).get("display_name")
+            if not display_name:
+                display_name = user_info.get("name")
+            
+            if display_name:
+                return display_name
+        
+        # If we can't get the name, return the original mention
+        return match.group(0)
+    
+    try:
+        cleaned_text = re.sub(mention_pattern, replace_mention, message_text)
+        return cleaned_text
+    except Exception as e:
+        logger.error(f"Error replacing user mentions: {e}")
+        return message_text
+
+
 def handle_reaction_added(event: Dict[str, Any]) -> bool:
     """
     Handle reaction_added event from Slack.
@@ -166,7 +204,7 @@ def handle_reaction_added(event: Dict[str, Any]) -> bool:
             })
             return False
         
-        # Extract message text
+        # Extract message text and replace user mentions with display names
         message_text = message.get("text", "")
         if not message_text:
             logger.warning("Message has no text content", {
@@ -174,6 +212,9 @@ def handle_reaction_added(event: Dict[str, Any]) -> bool:
                 "message_ts": message_ts
             })
             return False
+        
+        # Replace user ID mentions with display names
+        message_text = replace_user_mentions(message_text)
         
         # Get additional context for logging
         message_user_id = message.get("user")
