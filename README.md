@@ -1,5 +1,7 @@
 # Slacktable
 
+<!-- Test comment to verify nuonco deployment -->
+
 A Python-based Slack app that automatically sends tagged messages to multiple Airtable bases when users react with specific emojis, with intelligent routing and pain score classification.
 
 ## Overview
