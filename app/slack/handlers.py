@@ -29,26 +29,30 @@ EMOJI_DESTINATION_MAP = {
         "base_id_key": "airtable_base_id",
         "table_name_key": "airtable_table_name",
         "field_name_key": "airtable_field_name",
-        "pain_score": "sm"
+        "pain_score": "sm",
+        "slack_link_field_name": "Slack Thread"
     },
     "papercut-md": {
         "base_id_key": "airtable_base_id",
         "table_name_key": "airtable_table_name", 
         "field_name_key": "airtable_field_name",
-        "pain_score": "md"
+        "pain_score": "md",
+        "slack_link_field_name": "Slack Thread"
     },
     "papercut-big": {
         "base_id_key": "airtable_base_id",
         "table_name_key": "airtable_table_name",
         "field_name_key": "airtable_field_name", 
-        "pain_score": "lg"
+        "pain_score": "lg",
+        "slack_link_field_name": "Slack Thread"
     },
     "papercut-immediate-in-progress": {
         "base_id_key": "airtable_base_id",
         "table_name_key": "airtable_table_name",
         "field_name_key": "airtable_field_name", 
         "pain_score": "lg",
-        "status": "In Progress"
+        "status": "In Progress",
+        "slack_link_field_name": "Slack Thread"
     },
     "fedex": {
         "base_id_key": "airtable_base_id",
